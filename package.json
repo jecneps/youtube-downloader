@@ -1,0 +1,31 @@
+{
+  "name": "youtube-downloader",
+  "version": "1.0.0",
+  "description": "simple electron youtube downloader",
+  "main": "src/main.js",
+  "scripts": {
+    "build": "webpack src/front_end.js --output src/app.js --target=electron-renderer -d",
+    "start": "npm run build; electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jecneps/youtube-downloader.git"
+  },
+  "author": "Hazard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jecneps/youtube-downloader/issues"
+  },
+  "homepage": "https://github.com/jecneps/youtube-downloader#readme",
+  "devDependencies": {
+    "electron": "^5.0.5",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5"
+  },
+  "dependencies": {
+    "mithril": "^2.0.0-rc.6",
+    "sanitize-filename": "^1.6.1",
+    "youtube-playlist": "^1.0.2",
+    "ytdl-core": "^0.29.2"
+  }
+}
