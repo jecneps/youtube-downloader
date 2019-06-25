@@ -23,6 +23,9 @@
     "webpack-cli": "^3.3.5"
   },
   "dependencies": {
+    "ffmetadata": "^1.5.0",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
     "mithril": "^2.0.0-rc.6",
     "sanitize-filename": "^1.6.1",
     "youtube-playlist": "^1.0.2",
