@@ -37,10 +37,30 @@ function callipc(url, format) {
     console.log(`sent ${url} and ${format}`)
 }
 
+function makeCards() {
+    var cards = new Array()
+    activeFiles.forEach(function(file) {
+	var comp = m("div", {class:""}, [
+	    m("span", file.replace(".mp3", "")),
+	    m("span", "XX")
+	])
+	cards.push(comp)
+    })
+    return cards
+
+}
+
 
 function singleEditComponent() {
     return {
-	view: function() {}
+	view: function() {
+	    return m("div", {class: "flex flex-column items-center",
+			     style: "margin: auto"
+			    }, [
+				m("div", {class: "flex flex-column"}, makeCards()),
+				m("button", {class: ""}, "Finish")
+			    ])
+	}
     }
 }
 
@@ -89,6 +109,7 @@ function bulkEditComponent() {
 					   album: album,
 					   photo: photo
 				       })
+				       m.route.set("/singleEdit")
 				   }
 				  },
 			"Perform")
