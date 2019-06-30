@@ -1,0 +1,185 @@
+:root {
+    --red: rgba(255,74,86,1);
+}
+
+* {
+    font-weight: 100;
+    letter-spacing: 0.01em;
+    font-family: Helvetica, sans-serif;
+}
+
+body {
+    background-color: var(--red);
+    height: 100%;
+    width: 100%;
+}
+
+h1 {
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 35px;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; 
+    border-top: 16px solid var(--red); 
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+      
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#download {
+    width: 700px;
+}
+
+#singleEdit, #bulkEdit {
+    width: 400px;
+}
+
+#cards {
+    width: 400px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    position: absolute;
+    top: 50%;
+    left:50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+
+    padding: 30px 25px;
+    border-radius: 40px;
+    background-color: white;
+    max-height: 50%;
+    
+}
+
+.butt {
+    color: var(--red);
+    background-color: white;
+    padding: 20px 15px;
+    border-radius: 60px;
+    border: 1px solid var(--red);
+    outline: none;
+    
+}
+.butt:hover {
+    background-color: var(--red);
+    color: white;
+}
+
+
+/*
+ cool edit fields
+*/
+.editContainer {
+    position: relative;
+    padding: 10px 0px;
+    width: 100%;
+}
+
+.editContainer:first-of-type {
+    padding-top: 0px;
+}
+
+
+input[type=text] {
+    appearance: none; 
+    padding: 10px 15px;
+    border-radius: 60px;
+    border: 1px solid var(--red);
+    background: white;
+    color: var(--red);
+    margin-top: 30px;
+    width: 100%;
+}
+
+input[type="text"]:focus {
+    color: white;
+    outline: none;
+    background: var(--red);
+}
+
+label {
+    color: var(--red);
+    font-size: 17px;
+    box-sizing: border-box;
+    padding: 10px 15px;
+    display: block;
+    position: absolute;
+    margin-top: -75px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0px 15px;
+}
+
+
+/*
+ Display title cards
+*/
+.cardHolder {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
+    
+}
+
+.songContainer {
+    margin: 5px 0px;
+    position: relative;
+    display: flex;
+    justify-content:space-between;
+}
+
+.songContainer:first-of-type {
+    margin-top: 0px;
+}
+
+.name {
+    position: relative;
+    color: white;
+    background: var(--red);
+    padding: 10px 15px;
+    border: 1px solid var(--red);
+    border-radius: 60px;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 10px;x
+}
+
+.x {
+    color: var(--red);
+    background: white;
+    padding: 10px 15px;
+    border: 1px solid var(--red);
+    border-radius: 60px;
+    float: right;
+}
+
+.x:hover {
+    color: white;
+    background: var(--red);
+}
+
+
+
