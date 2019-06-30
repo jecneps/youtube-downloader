@@ -6,6 +6,7 @@ It's served me well so far. Cat Empire, The Happy Fits, and Vampire Weekend now 
 ## Instructions
 * Download repo
 * Have node js installed and npm installed
+* install ffmpeg on your computer (with linux, that's `sudo apt-get install ffmpeg`)
 * run `npm install` in the main folder
 * run `npm start` to launch
 * stop complaining that it's not packaged into a native app. Give it time
