@@ -9,6 +9,7 @@ const ffmpeg = require("fluent-ffmpeg")
 const Path = require("path")
 
 const SPLASH_PATH = `file://${__dirname}/splash_page.html`
+const ICON_PATH = `file://${__dirname}/web_hi_res_512.png`
 
 
 
@@ -24,7 +25,9 @@ const menu = [
 	label: "Open",
 	click: function() {
 	    selectFiles((files) => {
-		console.log(files)
+		// undefined when cancel button is clicked
+		if (files == undefined) { return }
+		
 		activeFiles = new Array()
 		files.forEach(function(file) {
 		    pathToFileObj(file, activeFiles)
@@ -85,6 +88,10 @@ function single(url, format, dir) {
     var options = format == "mp3" ? {filter: "audioonly"} : {}
     
     ytdl.getBasicInfo(url, (err, info) => {
+	if (err || info == undefined) {
+	    console.log(`err from single in get basic info:${JSON.stringify(err)}`)
+	    return
+	}
 	var title = sanitize(info.player_response.videoDetails.title)
 	var name = title + "." + format
 	var path = dir + "/" + name
@@ -149,6 +156,7 @@ function selectDownloadLocation(callback) {
 	properties: ["openDirectory"]
     }
     dialog.showOpenDialog(null, options, (filepaths) => {
+	if (filepaths == undefined) { return }
 	callback(filepaths[0])
     })
 }
@@ -274,7 +282,7 @@ function deleteFileRequest(event, args) {
     fs.unlink(args.path, (err) => {
 	console.log(err)
     })
-    activeFiles = activeFiles.filter((file) => filename != args.path)
+    activeFiles = activeFiles.filter((file) => file.dir + file.name != args.path)
 }
 
 function clearState(event, args) {
@@ -298,7 +306,8 @@ function setup() {
 	    webPreferences: {
 		// allows us to use webpack and requires on the render side
 		nodeIntegration: true
-	    }
+	    },
+	    icon: ICON_PATH
 	})
 	mainWindow.loadURL(SPLASH_PATH)
 	mainWindow.maximize()

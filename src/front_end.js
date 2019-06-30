@@ -46,8 +46,8 @@ class IPC {
 	this.ipc.send("updateFilesRequest", {})
     }
 
-    deleteRequest(path) {
-	this.ipc.send("deleteRequest", {path: path})
+    deleteRequest(file) {
+	this.ipc.send("deleteRequest", {path: file.dir + file.name})
     }
 
     clearState() {
@@ -111,8 +111,8 @@ function makeCards() {
     var cards = new Array()
     activeFiles.forEach(function(file) {
 	console.log(`file in cards:${JSON.stringify(file)}`)
-	var comp = m("div", {class:"bg-washed-red mt2 mb2"}, [
-	    m("span", {class: "f5",
+	var comp = m("div", {class:"songContainer"}, [
+	    m("div", {class: "name",
 		       onclick: function() {
 			   curData.title = file.meta.title
 			   curData.artist = file.meta.artist
@@ -121,7 +121,7 @@ function makeCards() {
 			   curData.show = true
 		       }
 		      }, file.name.replace(".mp3", "")),
-	    m("button", {class:"ml3 fr",
+	    m("button", {class:"x",
 			 onclick: function(){
 			     ipc.deleteRequest(file)
 			     ipc.updateFilesRequest()
@@ -138,55 +138,52 @@ function makeCards() {
 function singleEditComponent() {
     return {
 	view: function() {
-	    var main = m("div", {class: "bg-near-white flex flex-column items-center",
-			     style: "margin: auto"
-			    }, [
-				m("div", {class: "flex flex-column"}, makeCards()),
-				m("button", {class: "",
-					     onclick: function() {
-						 ipc.clearState()
-						 m.route.set("/download")
-					     }
-					    }, "Finish")
-			    ])
-	    return curData.show ? [main, singleEditPopup()] : main
+	    var main = m("div", {class: "container", id:"cards"}, [
+		m("h1", "Click to Edit"),
+		m("div", {class: "cardHolder"}, makeCards()),
+		m("button", {class: "butt",
+			     onclick: function() {
+				 ipc.clearState()
+				 m.route.set("/download")
+			     }
+			    }, "Finish")
+	    ])
+	    return curData.show ? singleEditPopup() : main
 	}
     }
 }
 
-function editField(title, dict, key, prefill) {
+function coolEditField(label, dict, key, autoFocus, prefill) {
     var text = prefill == undefined ? "" : prefill
-    return [m("p", title),
-	    m("input",{type: "text",
-		       class: "mb4",
-		       onchange: function(e) {
-			   e.redraw = false
-			   dict[key] = e.currentTarget.value
-		       },
-		       value: text
-		      })
-	    ]
+    var input = m("input", {type: "text",
+			    class: "textInput",
+			    autofocus: (autoFocus) ? "autofocus" : undefined,
+			    onchange: function(e) {
+				e.redraw = false
+				dict[key] = e.currentTarget.value
+			    },
+			    value: text
+			   })
+    var inner = (label == null) ? [input] : [input, m("label", {class: "lab"},label)]
+    return m("div", {class: "editContainer"}, inner)
+	
 }
 
+
 function singleEditPopup() {
-    return m("div", {class: "flex flex-column bg-orange w-50", style: "margin: auto"}, [
+    return m("div", {class: "container", id:"singleEdit"}, [
 	m("h1", "Single Edit") ,
-	m("div", {class: "flex"}, [
-	    m("div", {class: "flex flex-column"}, [
-		    ...editField("Title", curData, "title", curData.title),
-		    ...editField("Artist", curData, "artist", curData.artist),
-		    ...editField("Album", curData, "album", curData.album)
-	    ])
-	    // TODO: image thing
-	]),
-	m("div", {class: "flex"}, [
-	    m("button", {class: "",
+	coolEditField("Title", curData, "title", true, curData.title),
+	coolEditField("Artist", curData, "artist", false, curData.artist),
+	coolEditField("Album", curData, "album", false, curData.album),
+	m("div", {class: "buttons"}, [
+	    m("button", {class: "butt",
 			 onclick: function() {
 			     curData.show = false
 			 }
 			},
 	      "Cancel"),
-	    m("button", {class: "",
+	    m("button", {class: "butt",
 			 onclick: function() {
 			     curData.show = false
 			     curData.curFile.meta = curMeta()
@@ -208,24 +205,19 @@ function bulkEditComponent() {
     }
     return {
 	view: function() {
-	    return m("div", {class: "flex flex-column bg-orange w-50", style: "margin: auto"}, [
+	    return m("div", {class: "container", id:"bulkEdit"}, [
 		m("h1", "Bulk Edit") ,
-		m("div", {class: "flex"}, [
-		    m("div", {class: "flex flex-column"}, [
-			    ...editField("Artist", data, "artist"),
-			    ...editField("Album", data, "album")			
-		    ]),
-		    //TODO: IMAGE
-		]),
-		m("div", {class: "flex"}, [
-		    m("button", {class: "",
+		coolEditField("Artist", data, "artist"),
+		coolEditField("Album", data, "album"),
+		m("div", {class: "buttons"}, [
+		    m("button", {class: "butt",
 				 onclick: function() {
 				     ipc.updateFilesRequest()
 				     m.route.set("/singleEdit")
 				 }
 				},
 				 "Skip"),
-		      m("button", {class: "",
+		      m("button", {class: "butt",
 				   onclick: function() {
 				       var file = new File(null,
 								    null,
@@ -246,30 +238,24 @@ function bulkEditComponent() {
 
 
 function downloadComponent() {
-    let url = ""
-    let format = "mp3"
+    var data = {
+	url: ""
+    }
+    let format = "mp3" //spooooooky, a string that never get's changed!
     return  {
 	view: function() {
 	   // console.log(`load state ${loadState}`)
 	    var loadStyle = (loadState == LoadEnum.loading) ? "display:block" : "display:none"
 	    var submitStyle = (loadState == LoadEnum.loading) ? "display:none":"display:block"
 	   // console.log(`ls ${loadStyle} and ss ${submitStyle}`)
-	    return m("div", {class:"flex flex-column items-center"},[
+	    return m("div", {class:"container", id:"download"},[
 		m("h1", "Enter URL to download"),
 
 		// url text input
-		m("input", {type:"text",
-			    style:"width: 800px",
-			    class:"mb3",
-			    value: url,
-			    autofocus: "autofocus",
-			    onchange: function(e) {
-			//	e.redraw = false
-				url = e.currentTarget.value
-			    }
-			   }),
+		coolEditField(null, data, "url",true),
 		// radio buttons for format 
-		m("div", {class:"flex mb3"}, [
+	/* This was the radio buttons. Since my meta data refactoring didn't take into account mp4, and I really don't care to download videos, I'm just going to remove this from this version, come back to it later.
+	  m("div", {class:"flex mb3"}, [
 		    m("input", {type: "radio",
 				name:"format",
 				value:"mp3",
@@ -292,12 +278,14 @@ function downloadComponent() {
 			       }, "mp4"),
 		    m("div", {class:"mr2"}, "mp4")
 		    
-		]),
+		]), 
+		*/
 		//submit button
-		m("button", {style: submitStyle,
+		m("button", {class: "butt",
+			     style: submitStyle,
 			     onclick: function(e) {
 				 //e.redraw = false
-				 ipc.downloadRequest(url, format)
+				 ipc.downloadRequest(data.url, format)
 				 url = ""
 			 }
 			     
