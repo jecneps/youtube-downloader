@@ -3,6 +3,8 @@ Huzzah! Here's a simple electron app for downloading youtube videos as mp3's and
 
 It's served me well so far. Cat Empire, The Happy Fits, and Vampire Weekend now get to be a little bit closer to my heart.
 
+See [my writeup](http://www.jhazard.com/posts/too_cool_to_torrent.html) for notes on the development process.
+
 ## Instructions
 * Download repo
 * Have node js installed and npm installed
