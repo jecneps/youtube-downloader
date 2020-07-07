@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/jecneps/youtube-downloader#readme",
   "devDependencies": {
-    "electron": "^5.0.5",
+    "electron": "^7.2.4",
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5"
   },
